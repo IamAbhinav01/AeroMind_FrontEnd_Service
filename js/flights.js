@@ -195,11 +195,41 @@ document.addEventListener('DOMContentLoaded', () => {
           }),
         });
 
-        // Store email for payment step
-        if (email) localStorage.setItem(`booking_email_${result.data.id}`, email);
+        const booking = result.data;
+
+        // ── Persist booking to localStorage ─────────────────────────────────
+        // The Booking Service has no GET-by-ID endpoint, so we store the full
+        // booking object and a flight snapshot here at creation time.
+        // bookings.js reads from these keys to render the My Bookings page.
+        const enrichedBooking = {
+          ...booking,
+          // Attach flight display data so the bookings page can show route info
+          _flight: {
+            departureAirportId: selectedFlight.departureAirportId,
+            arrivalAirportId:   selectedFlight.arrivalAirportId,
+            departureAirport:   selectedFlight.departureAirport,
+            arrivalAirport:     selectedFlight.arrivalAirport,
+            flightNumber:       selectedFlight.flightNumber,
+            price:              selectedFlight.price,
+          },
+          _email: email || '',
+        };
+
+        // Save data for this specific booking
+        localStorage.setItem(`booking_data_${booking.id}`, JSON.stringify(enrichedBooking));
+
+        // Add to master booking ID list
+        const ids = JSON.parse(localStorage.getItem('am_booking_ids') || '[]');
+        if (!ids.includes(booking.id)) {
+          ids.unshift(booking.id); // newest first
+          localStorage.setItem('am_booking_ids', JSON.stringify(ids));
+        }
+
+        // Also store email separately for easy lookup in payment modal
+        if (email) localStorage.setItem(`booking_email_${booking.id}`, email);
 
         modal.classList.remove('open');
-        showToast(`✅ Booking #${result.data.id} created! Pay within 5 minutes.`, 'success');
+        showToast(`✅ Booking #${booking.id} created! Pay within 5 minutes.`, 'success');
         setTimeout(() => { window.location.href = 'my-bookings.html'; }, 2200);
       } catch (err) {
         showAlert(bookAlert, err.message || 'Booking failed. Please try again.');
