@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search Flights — AeroMind</title>
+  <meta name="description" content="Search real-time flight availability. Book seats with instant confirmation." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/flights.css" />
+  <style>
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+      padding: 13px 24px; border-radius: var(--radius-md);
+      font-size: 0.9rem; font-weight: 600;
+      opacity: 0; transition: opacity 0.3s, transform 0.3s; z-index: 999;
+      max-width: 400px; text-align: center;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast-success { background: #166534; border: 1px solid #22c55e; color: #4ade80; }
+    .toast-error   { background: #7f1d1d; border: 1px solid #ef4444; color: #f87171; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav scrolled" id="main-nav">
+    <a class="nav-brand" href="index.html">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M3 18L14 4L25 18H17L14 24L11 18H3Z" fill="white" opacity="0.9"/></svg>
+      <span>AeroMind</span>
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="flights.html" class="nav-link" style="color:var(--accent);">Search Flights</a>
+      <a href="my-bookings.html" class="nav-link" id="nav-bookings" style="display:none;">My Bookings</a>
+      <a href="signin.html" class="nav-btn-outline" id="nav-signin">Sign In</a>
+      <a href="signup.html" class="nav-btn" id="nav-signup">Get Started</a>
+      <button class="nav-btn-outline" id="nav-signout" style="display:none;" onclick="signOut()">Sign Out</button>
+    </div>
+  </nav>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <div class="container">
+      <div class="filter-row">
+        <div class="filter-field">
+          <label>From (Airport Code)</label>
+          <input type="text" id="f-from" placeholder="e.g. DEL" maxlength="10" />
+        </div>
+        <div class="filter-field">
+          <label>To (Airport Code)</label>
+          <input type="text" id="f-to" placeholder="e.g. BOM" maxlength="10" />
+        </div>
+        <div class="filter-field" style="flex:0 0 140px;">
+          <label>Date</label>
+          <input type="date" id="f-date" />
+        </div>
+        <div class="filter-field" style="flex:0 0 100px;">
+          <label>Passengers</label>
+          <input type="number" id="f-pax" min="1" max="9" value="1" />
+        </div>
+        <div class="filter-field" style="flex:0 0 120px;">
+          <label>Min Price (₹)</label>
+          <input type="number" id="f-min-price" placeholder="0" min="0" />
+        </div>
+        <div class="filter-field" style="flex:0 0 120px;">
+          <label>Max Price (₹)</label>
+          <input type="number" id="f-max-price" placeholder="50000" min="0" />
+        </div>
+        <div class="filter-field" style="flex:0 0 160px;">
+          <label>Sort By</label>
+          <select id="f-sort">
+            <option value="">Default</option>
+            <option value="price,ASC">Price: Low → High</option>
+            <option value="price,DESC">Price: High → Low</option>
+            <option value="departureTime,ASC">Departure: Earliest</option>
+            <option value="departureTime,DESC">Departure: Latest</option>
+            <option value="totalSeats,DESC">Most Seats</option>
+          </select>
+        </div>
+        <button class="filter-search-btn" id="filter-search-btn">Search ✈</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <main class="flights-page">
+    <div class="container">
+      <div class="results-header">
+        <p class="results-count" id="results-count"></p>
+      </div>
+      <div id="flights-list">
+        <div class="state-box">
+          <div class="state-icon">✈️</div>
+          <h3>Search for flights above</h3>
+          <p>Enter route details and click Search to see available flights.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- BOOK MODAL -->
+  <div class="modal-overlay" id="book-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modal-title">Book Flight</h3>
+        <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-flight-info">
+        <div class="route" id="modal-route">—</div>
+        <div class="meta"  id="modal-meta">—</div>
+      </div>
+      <div class="alert" id="modal-alert" role="alert"></div>
+      <form class="modal-form" id="modal-book-form" novalidate>
+        <div class="form-group">
+          <label for="modal-seats">Number of Seats</label>
+          <input type="number" id="modal-seats" class="form-control" min="1" max="9" value="1" />
+        </div>
+        <div class="form-group">
+          <label for="modal-email">Your Email (for confirmation)</label>
+          <input type="email" id="modal-email" class="form-control" placeholder="you@example.com" />
+        </div>
+        <div class="cost-preview">
+          <span class="label">Estimated Total</span>
+          <span class="amount" id="modal-cost">₹0</span>
+        </div>
+        <button type="submit" class="btn-primary">Confirm Booking</button>
+        <p style="font-size:0.78rem;color:var(--text-muted);text-align:center;line-height:1.5;">
+          Seats will be held for 5 minutes. Complete payment in My Bookings to confirm.
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/flights.js"></script>
+</body>
+</html>

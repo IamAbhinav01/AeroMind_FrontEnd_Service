@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Bookings — AeroMind</title>
+  <meta name="description" content="View, pay for, and manage all your AeroMind flight bookings." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/bookings.css" />
+  <link rel="stylesheet" href="css/flights.css" />
+  <style>
+    .toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+      padding: 13px 24px; border-radius: var(--radius-md); font-size: 0.9rem; font-weight: 600;
+      opacity: 0; transition: opacity 0.3s, transform 0.3s; z-index: 999;
+      max-width: 420px; text-align: center;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast-success { background: #166534; border: 1px solid #22c55e; color: #4ade80; }
+    .toast-error   { background: #7f1d1d; border: 1px solid #ef4444; color: #f87171; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav scrolled" id="main-nav">
+    <a class="nav-brand" href="index.html">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M3 18L14 4L25 18H17L14 24L11 18H3Z" fill="white" opacity="0.9"/></svg>
+      <span>AeroMind</span>
+    </a>
+    <div class="nav-links" id="nav-links">
+      <a href="flights.html" class="nav-link">Search Flights</a>
+      <a href="my-bookings.html" class="nav-link" id="nav-bookings" style="color:var(--accent);">My Bookings</a>
+      <a href="signin.html" class="nav-btn-outline" id="nav-signin" style="display:none;">Sign In</a>
+      <a href="signup.html" class="nav-btn" id="nav-signup" style="display:none;">Get Started</a>
+      <button class="nav-btn-outline" id="nav-signout" onclick="signOut()">Sign Out</button>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <div class="inner-header">
+    <div class="container">
+      <h1>My Bookings</h1>
+      <p>Track your flights, pay for pending bookings, and manage cancellations.</p>
+    </div>
+  </div>
+
+  <!-- BOOKINGS GRID -->
+  <main class="bookings-page">
+    <div class="container">
+      <div class="alert" id="page-alert" role="alert"></div>
+      <div class="bookings-grid" id="bookings-grid">
+        <div class="state-box" style="grid-column:1/-1">
+          <div class="state-icon">⏳</div>
+          <h3>Loading…</h3>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- PAYMENT MODAL -->
+  <div class="modal-overlay" id="pay-modal" role="dialog" aria-modal="true" aria-labelledby="pay-modal-title">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="pay-modal-title">💳 Complete Payment</h3>
+        <button class="modal-close" id="pay-modal-close" aria-label="Close">✕</button>
+      </div>
+
+      <!-- Idempotency info -->
+      <div class="pay-modal-idempotency">
+        <strong>🔒 Duplicate-charge protection active</strong>
+        Idempotency key: <code id="pay-idempotency-key" style="font-size:0.72rem;word-break:break-all;"></code>
+      </div>
+      <div id="pay-retry-hint" class="alert alert-warning" style="display:none;margin-top:10px;">
+        ⚠️ Retry detected — reusing the same key. You will NOT be charged twice.
+      </div>
+
+      <div class="alert" id="pay-alert" role="alert" style="margin-top:12px;"></div>
+
+      <form id="pay-form" novalidate style="display:flex;flex-direction:column;gap:16px;margin-top:16px;">
+        <!-- Summary -->
+        <div class="pay-modal-summary" id="pay-summary"></div>
+
+        <!-- Email for confirmation -->
+        <div class="pay-email-field form-group">
+          <label for="pay-email">Confirmation Email</label>
+          <input type="email" id="pay-email" class="form-control" placeholder="you@example.com" required autocomplete="email" />
+        </div>
+
+        <button type="submit" class="btn-primary" style="background:var(--success);color:#0a0b0d;">
+          Confirm & Pay
+        </button>
+        <p style="font-size:0.78rem;color:var(--text-muted);text-align:center;line-height:1.5;">
+          A confirmation email will be sent via RabbitMQ → Notification Service.
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/bookings.js"></script>
+</body>
+</html>

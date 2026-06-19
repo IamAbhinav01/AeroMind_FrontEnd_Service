@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account — AeroMind</title>
+  <meta name="description" content="Create your AeroMind account to start booking flights instantly." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/global.css" />
+  <style>
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(232,160,32,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav" id="main-nav">
+    <a class="nav-brand" href="index.html">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M3 18L14 4L25 18H17L14 24L11 18H3Z" fill="white" opacity="0.9"/></svg>
+      <span>AeroMind</span>
+    </a>
+    <div class="nav-links">
+      <a href="signin.html" class="nav-btn-outline">Sign In</a>
+    </div>
+  </nav>
+
+  <div class="page-wrap">
+    <div class="auth-card">
+      <div style="font-size:2rem; margin-bottom:16px;">🚀</div>
+      <h1 class="auth-card-title">Create your account</h1>
+      <p class="auth-card-sub">Join AeroMind and start booking smarter.</p>
+
+      <div class="alert" id="signup-alert" role="alert"></div>
+
+      <form class="auth-form" id="signup-form" novalidate>
+        <div class="form-group">
+          <label for="signup-name">Full Name</label>
+          <input type="text" id="signup-name" class="form-control" placeholder="John Doe" autocomplete="name" required />
+        </div>
+        <div class="form-group">
+          <label for="signup-email">Email Address</label>
+          <input type="email" id="signup-email" class="form-control" placeholder="you@example.com" autocomplete="email" required />
+        </div>
+        <div class="form-group">
+          <label for="signup-password">Password</label>
+          <div style="position:relative;">
+            <input type="password" id="signup-password" class="form-control" placeholder="Min. 8 characters" autocomplete="new-password" required minlength="8" style="padding-right:44px;" />
+            <button type="button" id="toggle-pw" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem;">👁</button>
+          </div>
+        </div>
+
+        <!-- Password strength bar -->
+        <div id="pw-strength-bar" style="height:4px;border-radius:2px;background:var(--border);overflow:hidden;display:none;">
+          <div id="pw-strength-fill" style="height:100%;width:0%;transition:width 0.3s,background 0.3s;border-radius:2px;"></div>
+        </div>
+
+        <button type="submit" class="btn-primary" id="signup-btn">Create Account</button>
+      </form>
+
+      <p class="auth-footer-text">Already have an account? <a href="signin.html">Sign in →</a></p>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/signup.js"></script>
+</body>
+</html>
