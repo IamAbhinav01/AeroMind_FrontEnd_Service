@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — AeroMind</title>
+  <meta name="description" content="Sign in to your AeroMind account to manage bookings and payments." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/global.css" />
+  <style>
+    body { background: var(--bg-base); }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(232,160,32,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav" id="main-nav">
+    <a class="nav-brand" href="index.html">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M3 18L14 4L25 18H17L14 24L11 18H3Z" fill="white" opacity="0.9"/></svg>
+      <span>AeroMind</span>
+    </a>
+    <div class="nav-links">
+      <a href="signup.html" class="nav-btn-outline">Create Account</a>
+    </div>
+  </nav>
+
+  <div class="page-wrap">
+    <div class="auth-card">
+      <div style="font-size:2rem; margin-bottom:16px;">✈️</div>
+      <h1 class="auth-card-title">Welcome back</h1>
+      <p class="auth-card-sub">Sign in to manage your flights and bookings.</p>
+
+      <div class="alert" id="signin-alert" role="alert"></div>
+
+      <form class="auth-form" id="signin-form" novalidate>
+        <div class="form-group">
+          <label for="signin-email">Email Address</label>
+          <input type="email" id="signin-email" class="form-control" placeholder="you@example.com" autocomplete="email" required />
+        </div>
+        <div class="form-group">
+          <label for="signin-password">Password</label>
+          <div style="position:relative;">
+            <input type="password" id="signin-password" class="form-control" placeholder="Your password" autocomplete="current-password" required style="padding-right:44px;" />
+            <button type="button" id="toggle-pw" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem;">👁</button>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary" id="signin-btn">Sign In</button>
+      </form>
+
+      <p class="auth-footer-text">Don't have an account? <a href="signup.html">Create one →</a></p>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/signin.js"></script>
+</body>
+</html>
