@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AeroMind — Fly Smarter</title>
+  <meta name="description" content="AeroMind is a premium flight booking platform offering real-time seat availability, secure payments, and instant confirmations." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/landing.css" />
+</head>
+<body>
+
+  <!-- ═══ NAV ═══ -->
+  <nav class="nav" id="main-nav">
+    <div class="nav-brand">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 18L14 4L25 18H17L14 24L11 18H3Z" fill="white" opacity="0.9"/>
+      </svg>
+      <span>AeroMind</span>
+    </div>
+    <div class="nav-links" id="nav-links">
+      <a href="flights.html" class="nav-link">Search Flights</a>
+      <a href="my-bookings.html" class="nav-link" id="nav-bookings" style="display:none;">My Bookings</a>
+      <a href="signin.html" class="nav-btn-outline" id="nav-signin">Sign In</a>
+      <a href="signup.html" class="nav-btn" id="nav-signup">Get Started</a>
+      <button class="nav-btn-outline" id="nav-signout" style="display:none;" onclick="signOut()">Sign Out</button>
+    </div>
+  </nav>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <div class="video-wrapper">
+      <video id="bg-video" autoplay muted loop playsinline>
+        <source src="assests/aeromind.mp4" type="video/mp4" />
+      </video>
+      <div class="video-overlay"></div>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-badge">✈ Next-Gen Flight Booking</div>
+      <h1 class="hero-title">
+        The Sky Is<br />
+        <span class="hero-title-accent">Your Starting Point</span>
+      </h1>
+      <p class="hero-subtitle">
+        Real-time availability. Instant confirmation. Zero double-bookings.<br />
+        Built for travellers who demand reliability.
+      </p>
+
+      <!-- Quick Search -->
+      <div class="quick-search-card" id="quick-search">
+        <div class="qs-row">
+          <div class="qs-field">
+            <label>From</label>
+            <input type="text" id="qs-from" placeholder="City or airport code" autocomplete="off" />
+          </div>
+          <button class="qs-swap" id="qs-swap-btn" title="Swap airports">⇄</button>
+          <div class="qs-field">
+            <label>To</label>
+            <input type="text" id="qs-to" placeholder="City or airport code" autocomplete="off" />
+          </div>
+          <div class="qs-field qs-field-sm">
+            <label>Date</label>
+            <input type="date" id="qs-date" />
+          </div>
+          <div class="qs-field qs-field-sm">
+            <label>Passengers</label>
+            <input type="number" id="qs-pax" min="1" max="9" value="1" />
+          </div>
+          <button class="qs-btn" id="qs-search-btn">Search Flights</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-scroll-hint">
+      <span>Scroll to explore</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- ═══ FEATURES ═══ -->
+  <section class="features-section">
+    <div class="container">
+      <p class="section-eyebrow">Why AeroMind</p>
+      <h2 class="section-title">Engineered for Trust</h2>
+      <p class="section-sub">Every request is rate-limited, authenticated, and protected against double-booking at the database level.</p>
+      <div class="features-grid">
+        <div class="feature-card" style="--delay:0s">
+          <div class="feature-icon">🔒</div>
+          <h3>Secure by Design</h3>
+          <p>JWT authentication, bcrypt password hashing, and Redis token-bucket rate limiting guard every endpoint.</p>
+        </div>
+        <div class="feature-card" style="--delay:0.1s">
+          <div class="feature-icon">⚡</div>
+          <h3>Zero Race Conditions</h3>
+          <p>Pessimistic row-level locking (SELECT FOR UPDATE) ensures seats are never double-booked, even under heavy concurrency.</p>
+        </div>
+        <div class="feature-card" style="--delay:0.2s">
+          <div class="feature-icon">📧</div>
+          <h3>Instant Confirmations</h3>
+          <p>RabbitMQ-driven async notifications send beautifully formatted booking confirmation emails the moment payment clears.</p>
+        </div>
+        <div class="feature-card" style="--delay:0.3s">
+          <div class="feature-icon">💳</div>
+          <h3>Idempotent Payments</h3>
+          <p>Automatic idempotency keys stored in localStorage mean retrying a payment never results in a duplicate charge.</p>
+        </div>
+        <div class="feature-card" style="--delay:0.4s">
+          <div class="feature-icon">🕐</div>
+          <h3>Auto-Expiry</h3>
+          <p>Unpaid bookings are automatically cancelled after 5 minutes via a scheduled cron job, releasing seats instantly.</p>
+        </div>
+        <div class="feature-card" style="--delay:0.5s">
+          <div class="feature-icon">🌐</div>
+          <h3>Microservices Architecture</h3>
+          <p>Four independent services — Gateway, Flights, Booking, Notifications — each with its own database and fault boundary.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA ═══ -->
+  <section class="cta-section">
+    <div class="container cta-inner">
+      <h2>Ready to take off?</h2>
+      <p>Create your account and search thousands of flights in seconds.</p>
+      <div class="cta-btns">
+        <a href="signup.html" class="btn-primary-lg">Create Free Account</a>
+        <a href="flights.html" class="btn-ghost-lg">Browse Flights →</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <svg width="22" height="22" viewBox="0 0 28 28" fill="none"><path d="M3 18L14 4L25 18H17L14 24L11 18H3Z" fill="white" opacity="0.7"/></svg>
+        <span>AeroMind</span>
+      </div>
+      <p class="footer-copy">© 2026 AeroMind. Built with Node.js microservices.</p>
+    </div>
+  </footer>
+
+  <script src="js/auth.js"></script>
+  <script src="js/landing.js"></script>
+</body>
+</html>
