@@ -349,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // ── Start API Call ──
       const user = getUser();
-      const apiPromise = fetch(`${API_BASE}/bookings/payment`, {
+      const apiPromise = fetch(`${API_BASE}/booking/payment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -422,7 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!confirm('Cancel this booking? Seats will be released immediately.')) return;
 
     try {
-      await apiFetch('/bookings/cancel', {
+      await apiFetch('/booking/cancel', {
         method: 'DELETE',
         body: JSON.stringify({ bookingId: parseInt(bookingId) }),
       });

@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
       submitBtn.innerHTML = '<span class="spinner"></span> Booking…';
 
       try {
-        const result = await apiFetch('/bookings', {
+        const result = await apiFetch('/booking', {
           method: 'POST',
           body: JSON.stringify({
             flightId: selectedFlight.id,
@@ -251,6 +251,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ── Search button ── */
   document.getElementById('filter-search-btn')?.addEventListener('click', searchFlights);
+
+  /* ── AI Search button ── */
+  document.getElementById('ai-search-btn')?.addEventListener('click', async () => {
+    const aiInput = document.getElementById('ai-search-input');
+    const aiBtn = document.getElementById('ai-search-btn');
+    const query = aiInput?.value.trim();
+    if (!query) return;
+
+    aiBtn.disabled = true;
+    const originalText = aiBtn.innerHTML;
+    aiBtn.innerHTML = 'Thinking... 🧠';
+
+    try {
+      const res = await apiFetch('/ai/semantic-search', {
+        method: 'POST',
+        body: JSON.stringify({ query })
+      });
+      
+      const params = res.data;
+      if (params) {
+        if (params.departureAirportId && fFrom) fFrom.value = params.departureAirportId;
+        if (params.arrivalAirportId && fTo) fTo.value = params.arrivalAirportId;
+        if (params.date && fDate) fDate.value = params.date;
+        if (params.maxPrice && fMax) fMax.value = params.maxPrice;
+        
+        showToast('AI mapped your search! Finding flights...', 'success');
+        searchFlights();
+      } else {
+        showToast('Could not understand the query. Please try again.', 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('AI search failed.', 'error');
+    } finally {
+      aiBtn.disabled = false;
+      aiBtn.innerHTML = originalText;
+    }
+  });
 
   /* ── Keyboard enter ── */
   document.querySelectorAll('.filter-field input').forEach(el => {

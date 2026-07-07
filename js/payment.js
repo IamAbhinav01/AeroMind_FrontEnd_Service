@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ── API call (fires immediately, concurrent with animation) ── */
   const user = getUser();
-  const apiPromise = fetch(`${API_BASE}/bookings/payment`, {
+  const apiPromise = fetch(`${API_BASE}/booking/payment`, {
     method: 'POST',
     headers: {
       'Content-Type':       'application/json',
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // If you want to cancel immediately, uncomment the block below:
     /*
     try {
-      await fetch(`${API_BASE}/bookings/cancel`, {
+      await fetch(`${API_BASE}/booking/cancel`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json', 'x-access-token': getToken() },
         body: JSON.stringify({ bookingId: parseInt(bookingId) }),

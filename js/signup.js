@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.innerHTML = '<span class="spinner"></span> Creating account…';
 
     try {
-      await apiFetch('/user/signup', {
+      await apiFetch('/user/create', {
         method: 'POST',
         body: JSON.stringify({ name, email, password }),
       });
