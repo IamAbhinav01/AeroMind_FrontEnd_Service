@@ -107,7 +107,17 @@ function showAlert(el, msg, type = 'error') {
   if (type === 'success') setTimeout(() => { el.style.display = 'none'; }, 5000);
 }
 
+/* ── Background Server Wake-up Ping ── */
+function wakeUpServers() {
+  // Fire off hidden requests to wake up all 4 microservices 
+  // while the user is busy looking at the UI or typing!
+  fetch(`${API_BASE}/flights`).catch(() => {});
+  fetch(`${API_BASE}/booking`).catch(() => {});
+  fetch('https://aeromind-ai-service.onrender.com/healthy').catch(() => {});
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  wakeUpServers();
   hydrateNav();
   initNav();
 });
