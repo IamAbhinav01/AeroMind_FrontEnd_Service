@@ -141,7 +141,11 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="fc-price-unit">per seat</div>
       </div>
       <div class="fc-action">
-        <button class="btn-book" data-flight-id="${f.id}">Book Now</button>
+        ${
+          new Date(f.departureTime || Date.now()) < new Date()
+            ? `<button class="btn-book" disabled style="background:#9ca3af;cursor:not-allowed;">Departed</button>`
+            : `<button class="btn-book" data-flight-id="${f.id}">Book Now</button>`
+        }
       </div>
     </div>`;
   }
