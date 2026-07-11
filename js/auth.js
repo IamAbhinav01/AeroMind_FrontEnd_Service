@@ -53,15 +53,49 @@ function requireAuth() {
   }
 }
 
+/* ── Global Toast for API Loading ── */
+function showGlobalToast(msg, type = 'info') {
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.textContent = msg;
+  // Fallback styling in case toast css is missing
+  toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:12px 24px;border-radius:8px;z-index:9999;font-weight:500;box-shadow:0 10px 30px rgba(0,0,0,0.2);';
+  if(type === 'info') toast.style.background = '#0ea5e9';
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 6000);
+}
+
 /* ── Fetch wrapper with auth header ── */
 async function apiFetch(path, options = {}) {
   const token = getToken();
   const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
   if (token) headers['x-access-token'] = token;
-  const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
-  const data = await res.json();
-  if (!res.ok) throw { status: res.status, message: data.message || 'Request failed', data };
-  return data;
+
+  // Render Free Tier Cold Start Notifier
+  const wakeUpAlert = setTimeout(() => {
+    showGlobalToast('Waking up the free-tier servers... This usually takes 30-50 seconds! ☕', 'info');
+  }, 2500);
+
+  try {
+    const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
+    clearTimeout(wakeUpAlert);
+    
+    // If Render returns an HTML error page (502 Bad Gateway) while booting
+    const contentType = res.headers.get('content-type');
+    if (contentType && contentType.includes('text/html')) {
+        throw new Error('The server is still booting up! Please wait 20 seconds and try again. 🚀');
+    }
+
+    const data = await res.json();
+    if (!res.ok) throw { status: res.status, message: data.message || 'Request failed', data };
+    return data;
+  } catch (err) {
+    clearTimeout(wakeUpAlert);
+    if (err.name === 'SyntaxError' || err.message.includes('Unexpected token')) {
+      throw new Error('Server is waking up... Please wait a few seconds! ⏳');
+    }
+    throw err;
+  }
 }
 
 /* ── Show/hide alert helper ── */
