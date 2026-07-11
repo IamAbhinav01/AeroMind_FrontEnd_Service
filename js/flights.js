@@ -105,6 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const arrCity = f.arrivalAirport?.cityDetails?.name  || '';
     const depTime = f.departureTime ? new Date(f.departureTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '--:--';
     const arrTime = f.arrivalTime   ? new Date(f.arrivalTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })   : '--:--';
+    const depDateStr = f.departureTime ? new Date(f.departureTime).toLocaleDateString([], { day: '2-digit', month: 'short', year: 'numeric' }) : '';
+    const arrDateStr = f.arrivalTime   ? new Date(f.arrivalTime).toLocaleDateString([], { day: '2-digit', month: 'short', year: 'numeric' })   : '';
 
     let duration = '';
     if (f.departureTime && f.arrivalTime) {
@@ -122,7 +124,8 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="fc-route">
         <div class="fc-airport">
           <div class="fc-airport-code">${dep}</div>
-          <div class="fc-airport-time">${depTime}</div>
+          <div class="fc-airport-time" style="font-weight:700;">${depTime}</div>
+          <div class="fc-airport-time" style="font-size:0.85rem;">${depDateStr}</div>
           ${depCity ? `<div class="fc-airport-time">${depCity}</div>` : ''}
         </div>
         <div class="fc-line">
@@ -132,7 +135,8 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div class="fc-airport">
           <div class="fc-airport-code">${arr}</div>
-          <div class="fc-airport-time">${arrTime}</div>
+          <div class="fc-airport-time" style="font-weight:700;">${arrTime}</div>
+          <div class="fc-airport-time" style="font-size:0.85rem;">${arrDateStr}</div>
           ${arrCity ? `<div class="fc-airport-time">${arrCity}</div>` : ''}
         </div>
       </div>
