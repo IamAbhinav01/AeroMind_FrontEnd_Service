@@ -63,7 +63,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderFlights(flights) {
     const listEl = document.getElementById('flights-list');
-    if (!flights.length) { 
+    
+    // Completely hide flights that have already departed
+    const availableFlights = flights.filter(f => new Date(f.departureTime || Date.now()) > new Date());
+
+    if (!availableFlights.length) { 
       listEl.innerHTML = renderState('empty'); 
       const clearBtn = document.getElementById('clear-search-btn');
       if (clearBtn) {
@@ -85,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       return; 
     }
-    listEl.innerHTML = flights.map(f => flightCard(f)).join('');
+    listEl.innerHTML = availableFlights.map(f => flightCard(f)).join('');
     listEl.querySelectorAll('.btn-book').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.dataset.flightId;
