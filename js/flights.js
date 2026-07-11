@@ -63,7 +63,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderFlights(flights) {
     const listEl = document.getElementById('flights-list');
-    if (!flights.length) { listEl.innerHTML = renderState('empty'); return; }
+    if (!flights.length) { 
+      listEl.innerHTML = renderState('empty'); 
+      const clearBtn = document.getElementById('clear-search-btn');
+      if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+          // Clear all search fields
+          const fFrom = document.getElementById('f-from');
+          const fTo = document.getElementById('f-to');
+          const fDate = document.getElementById('f-date');
+          const fMax = document.getElementById('f-max-price');
+          const aiSearch = document.getElementById('ai-search-input');
+          if (fFrom) fFrom.value = '';
+          if (fTo) fTo.value = '';
+          if (fDate) fDate.value = '';
+          if (fMax) fMax.value = '';
+          if (aiSearch) aiSearch.value = '';
+          // Trigger search without filters
+          searchFlights();
+        });
+      }
+      return; 
+    }
     listEl.innerHTML = flights.map(f => flightCard(f)).join('');
     listEl.querySelectorAll('.btn-book').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -127,7 +148,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderState(type, msg = '') {
     if (type === 'loading') return `<div class="state-box"><div class="state-icon">⏳</div><h3>Searching flights…</h3><p>Fetching real-time availability.</p></div>`;
-    if (type === 'empty')   return `<div class="state-box"><div class="state-icon">🔍</div><h3>No flights found</h3><p>Try different dates, airports, or fewer passengers.</p></div>`;
+    if (type === 'empty')   return `
+      <div class="state-box">
+        <div class="state-icon">🔍</div>
+        <h3>No flights found for this route/date</h3>
+        <p>Sorry, there are no available flights matching your exact criteria.</p>
+        <button id="clear-search-btn" class="btn-primary" style="margin-top: 20px;">Clear Filters & See All Flights</button>
+      </div>`;
     if (type === 'error')   return `<div class="state-box"><div class="state-icon">⚠️</div><h3>Something went wrong</h3><p>${msg || 'Could not reach the server.'}</p></div>`;
     return '';
   }
